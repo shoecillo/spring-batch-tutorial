@@ -3,9 +3,11 @@ package com.sh.config.db;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
@@ -18,8 +20,24 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
  *
  */
 @Configuration
+@PropertySource("classpath:application.properties")
 public class DbConfig 
 {
+	@Value("${db.jdbc.driver}")
+	private String driver;
+	
+	@Value("${db.jdbc.url}")
+	private String dbUrl;
+	
+	@Value("${db.jdbc.user}")
+	private String user;
+	
+	@Value("${db.jdbc.pass}")
+	private String pass;
+	
+	@Value("${db.mem.script}")
+	private String scriptInMem;
+	
 	/**
 	 * Datasource for write process
 	 * @return Datasource configured datasource
@@ -32,7 +50,7 @@ public class DbConfig
 		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
 		EmbeddedDatabase db = builder
 			.setType(EmbeddedDatabaseType.HSQL) //.H2 or .DERBY
-			.addScript("schema-all.sql")
+			.addScript(scriptInMem)
 			.build();
 		return db;
 	}
@@ -44,10 +62,10 @@ public class DbConfig
     @Qualifier("dsOrigen")
     public DataSource getDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/batchjobs");
-        dataSource.setUsername("root");
-        dataSource.setPassword("password");
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(dbUrl);
+        dataSource.setUsername(user);
+        dataSource.setPassword(pass);
          
         return dataSource;
     }

@@ -110,9 +110,9 @@ public class BatchConfiguration {
     public Step step1() {
         return stepBuilderFactory.get("step1")
                 .<Person, Person> chunk(10)
-                .reader(readers.readerJdbc())
+                .reader(readers.readerXml())
                 .processor(processor())
-                .writer(writers.writer())
+                .writer(writers.xmlItemWriter())
                 .build();
     }
    
