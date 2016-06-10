@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persons>
+    <person>
+        <lastName>Juan</lastName>
+        <firstName>Nadie</firstName>
+    </person>
+    <person>
+        <lastName>Perico</lastName>
+        <firstName>De los Palotes</firstName>
+    </person>
+    <person>
+        <lastName>Maria</lastName>
+        <firstName>Sanchez</firstName>
+    </person>
+    <person>
+        <lastName>Jose Maria</lastName>
+        <firstName>Caballero</firstName>
+    </person>
+</persons>
