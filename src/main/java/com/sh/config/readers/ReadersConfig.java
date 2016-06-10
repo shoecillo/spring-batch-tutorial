@@ -14,8 +14,10 @@ import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.xml.StaxEventItemReader;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
@@ -23,8 +25,19 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import com.sh.model.Person;
 
 @Configuration
+@PropertySource("classpath:application.properties")
 public class ReadersConfig 
 {
+	
+	@Value("${import.file.xml}")
+	private String xmlFile;
+	
+	@Value("${import.file.csv}")
+	private String csvFile;
+	
+	@Value("${import.file.txt}")
+	private String txtFile;
+	
 	/**
 	 * Injected datasource for read values
 	 */
@@ -60,7 +73,7 @@ public class ReadersConfig
 	     {
 	    	 StaxEventItemReader<Person> xmlFileReader = new StaxEventItemReader<Person>();
 	    	 
-	    	 xmlFileReader.setResource(new ClassPathResource("data/persons.xml"));
+	    	 xmlFileReader.setResource(new ClassPathResource(xmlFile));
 	         xmlFileReader.setFragmentRootElementName("person");
 	  
 	         Jaxb2Marshaller studentMarshaller = new Jaxb2Marshaller();
@@ -75,9 +88,9 @@ public class ReadersConfig
 	      * @return FlatFileItemReader Configured reader
 	      */
 	     @Bean
-	     public FlatFileItemReader<Person> readerPattern() {
+	     public FlatFileItemReader<Person> readerTxt() {
 	         FlatFileItemReader<Person> readerPattern = new FlatFileItemReader<Person>();
-	         readerPattern.setResource(new ClassPathResource("data/persons.txt"));
+	         readerPattern.setResource(new ClassPathResource(txtFile));
 	         readerPattern.setLineMapper(new DefaultLineMapper<Person>() {{
 	             setLineTokenizer(new DelimitedLineTokenizer() 
 	             {{
@@ -97,9 +110,9 @@ public class ReadersConfig
 	     * @return FlatFileItemReader Configured reader
 	     */
 	    @Bean
-	    public FlatFileItemReader<Person> reader() {
+	    public FlatFileItemReader<Person> readerCsv() {
 	        FlatFileItemReader<Person> reader = new FlatFileItemReader<Person>();
-	        reader.setResource(new ClassPathResource("data/sample-data.csv"));
+	        reader.setResource(new ClassPathResource(csvFile));
 	        reader.setLineMapper(new DefaultLineMapper<Person>() {{
 	            setLineTokenizer(new DelimitedLineTokenizer() {{
 	                setNames(new String[] { "firstName", "lastName" });
